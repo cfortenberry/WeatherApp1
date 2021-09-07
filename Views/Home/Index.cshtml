@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    @* Start time - 2021:09:07 15:00:00  (3:00PM 9/7/21) *@
+    @* End Time   - 2021:09:07 16:50:00  (4:50PM 9/7/21) *@
+
+    <h1>Weather Search</h1>
+    <p class="lead">Enter the zip code: </p>
+    <form>
+        <input id="zip" min="5" maxlength="5" />
+        <a @*href="https://asp.net"*@ class="btn btn-primary btn-sm" onclick="getWeather()">Search &raquo;</a>
+    </form>
+
+    <div>
+        <p id="error"></p>
+        <p id="city"></p>
+        <p id="main"></p>
+        <p id="temp"></p>
+        <p id="tempLow"></p>
+        <p id="tempHigh"></p>
+        <p id="feelsLike"></p>
+        <p id="humidity"></p>
+    </div>
+
+    <script>
+        const getWeather = async () => {
+            var errorElement = document.getElementById('error');
+            var cityElement = document.getElementById('city');
+            var mainElement = document.getElementById('main');
+            var tempElement = document.getElementById('temp');
+            var tempLowElement = document.getElementById('tempLow');
+            var tempHighElement = document.getElementById('tempHigh');
+            var feelsLikeElement = document.getElementById('feelsLike');
+            var humidityElement = document.getElementById('humidity');
+
+            var zip = document.getElementById('zip').value;
+            var countryCode = 'us';
+            var apiKey = '3149c5caadc97c0f28b8ebf0d509dc10';
+            var units = 'imperial';
+
+            var apiString = 'https://api.openweathermap.org/data/2.5/weather?zip=' + zip + ',' + countryCode + '&appid=' + apiKey + '&units=' + units;
+
+            try {
+                const response = await fetch(apiString);
+                const myJson = await response.json();
+
+                cityElement.innerText = 'City: ' + myJson.name;
+                mainElement.innerText = 'Current Weather: ' + myJson.weather[0].main;
+                tempElement.innerText = 'Temperature: ' + myJson.main.temp;
+                tempLowElement.innerText = 'Low Temp: ' + myJson.main.temp_min;
+                tempHighElement.innerText = 'High Temp: ' + myJson.main.temp_max;
+                feelsLikeElement.innerText = 'Feels Like: ' + myJson.main.feels_like;
+                humidityElement.innerText = 'Humidity: ' + myJson.main.humidity;
+            }
+            catch (e) {
+                cityElement.innerText = '';
+                mainElement.innerText = '';
+                tempElement.innerText = '';
+                tempLowElement.innerText = '';
+                tempHighElement.innerText = '';
+                feelsLikeElement.innerText = '';
+                humidityElement.innerText = '';
+            }
+        }
+    </script>
+</div>
